@@ -209,7 +209,7 @@ html, body {
 .night-row {
   display: flex;
   align-items: center;
-  padding: 14px 20px;
+  padding: 14px 24px;
   gap: 10px;
   border-bottom: 1px solid var(--border);
   cursor: default;
@@ -220,35 +220,35 @@ html, body {
 .night-row:last-child { border-bottom: none; }
 .night-row:active { background: rgba(255,255,255,0.03); }
 
+/* Layout order: day | bar (fixed) | score | label (fills rest, left-aligned) */
+
 .row-day {
   font-size: 15px;
   font-weight: 500;
   color: var(--text-primary);
-  width: 90px;
+  width: 86px;
   flex-shrink: 0;
 }
 
 .row-bar {
   display: flex;
   gap: 3px;
-  flex: 1;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 .bar-segment {
   height: 8px;
-  width: 18px;
+  width: 16px;
   border-radius: 2px;
   background: var(--border);
   transition: background 0.2s;
-  flex-shrink: 0;
 }
 
 .row-score {
   font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
-  width: 34px;
+  width: 32px;
   text-align: right;
   flex-shrink: 0;
 }
@@ -256,8 +256,9 @@ html, body {
 .row-label {
   font-size: 12px;
   color: var(--text-secondary);
-  text-align: right;
-  flex-shrink: 0;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
