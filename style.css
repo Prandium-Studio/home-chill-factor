@@ -5,7 +5,7 @@
   --text-primary:  #f0e8d8;
   --text-secondary:#a89880;
   --text-muted:    #6b5e50;
-  --accent-none:   #4a4540;
+  --accent-none:   #9e9690;
   --accent-light:  #c8a86b;
   --accent-moderate:#d4823a;
   --accent-strong: #c85a1e;
@@ -209,12 +209,13 @@ html, body {
 .night-row {
   display: flex;
   align-items: center;
-  padding: 14px 24px;
-  gap: 14px;
+  padding: 14px 20px;
+  gap: 10px;
   border-bottom: 1px solid var(--border);
   cursor: default;
   transition: background 0.1s;
   -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
 }
 .night-row:last-child { border-bottom: none; }
 .night-row:active { background: rgba(255,255,255,0.03); }
@@ -223,39 +224,44 @@ html, body {
   font-size: 15px;
   font-weight: 500;
   color: var(--text-primary);
-  width: 100px;
+  width: 90px;
   flex-shrink: 0;
 }
 
 .row-bar {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
+  min-width: 0;
 }
 
 .bar-segment {
   height: 8px;
-  width: 20px;
+  width: 18px;
   border-radius: 2px;
   background: var(--border);
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 .row-score {
   font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
-  width: 36px;
+  width: 34px;
   text-align: right;
   flex-shrink: 0;
 }
 
 .row-label {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   text-align: right;
   flex-shrink: 0;
-  min-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
 }
 
 /* ── Last updated ── */

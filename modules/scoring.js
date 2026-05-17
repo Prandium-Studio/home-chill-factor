@@ -87,9 +87,9 @@ export function timingFlag(eveningTemps) {
 }
 
 export function adviceFromScore(score) {
-  if (score < 1.5) return { label: 'No fire needed',        detail: 'Mild night ahead',                     intensity: 0 };
-  if (score < 3.5) return { label: 'Light burn',            detail: 'Optional warmth',                      intensity: 1 };
-  if (score < 5.5) return { label: 'Moderate burn',         detail: 'Worth lighting tonight',               intensity: 2 };
-  if (score < 7.5) return { label: 'Strong burn',           detail: 'Prep the fireplace before dark',       intensity: 3 };
-  return             { label: 'Full burn — start early',  detail: 'Cold night. Light well before dark.',  intensity: 4 };
+  if (score < 1.5) return { label: 'No fire needed',       rowLabel: 'No fire',   detail: 'Mild night ahead',                    intensity: 0 };
+  if (score < 3.5) return { label: 'Light burn',           rowLabel: 'Light',     detail: 'Optional warmth',                     intensity: 1 };
+  if (score < 5.5) return { label: 'Moderate burn',        rowLabel: 'Moderate',  detail: 'Worth lighting tonight',              intensity: 2 };
+  if (score < 7.5) return { label: 'Strong burn',          rowLabel: 'Strong',    detail: 'Prep the fireplace before dark',      intensity: 3 };
+  return             { label: 'Full burn — start early', rowLabel: 'Full burn', detail: 'Cold night. Light well before dark.', intensity: 4 };
 }

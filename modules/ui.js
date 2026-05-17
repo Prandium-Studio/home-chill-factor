@@ -1,6 +1,18 @@
 import { adviceFromScore, timingFlag } from './scoring.js';
 
-const INTENSITY_COLOURS = ['#4a4540', '#c8a86b', '#d4823a', '#c85a1e', '#b83010'];
+const INTENSITY_COLOURS = ['#9e9690', '#c8a86b', '#d4823a', '#c85a1e', '#b83010'];
+
+// Returns a CSS colour for the hero score number.
+// Below 4.5: uses intensity palette. 4.5–9+: interpolates from warm-neutral to ice blue.
+function scoreColour(score, intensity) {
+  if (score < 4.5) return INTENSITY_COLOURS[intensity];
+  // 4.5 → slight blue tinge (#a0b4c8), 9.0+ → vivid ice blue (#60c8f0)
+  const t = Math.min((score - 4.5) / 4.5, 1); // 0 at 4.5, 1 at 9.0
+  const r = Math.round(160 + (96  - 160) * t);  // 160 → 96
+  const g = Math.round(180 + (200 - 180) * t);  // 180 → 200
+  const b = Math.round(200 + (240 - 200) * t);  // 200 → 240
+  return `rgb(${r},${g},${b})`;
+}
 
 function flameSVG(intensity) {
   if (intensity === 0) {
@@ -63,7 +75,9 @@ export function renderHero(nightData, score) {
 
   document.getElementById('tonight-label').textContent = nightData.label.toUpperCase();
   document.getElementById('flame-icon').innerHTML = flameSVG(advice.intensity);
-  document.getElementById('score-number').textContent = score.total.toFixed(1);
+  const scoreEl = document.getElementById('score-number');
+  scoreEl.textContent = score.total.toFixed(1);
+  scoreEl.style.color = scoreColour(score.total, advice.intensity);
   document.getElementById('advice-label').textContent = advice.label;
   document.getElementById('advice-detail').textContent = advice.detail;
 
@@ -95,7 +109,7 @@ export function renderRows(nights, scores) {
       `<span class="row-day">${night.label}</span>` +
       `<div class="row-bar">${intensityBarHTML(advice.intensity)}</div>` +
       `<span class="row-score">${score.total.toFixed(1)}</span>` +
-      `<span class="row-label">${advice.label}</span>`;
+      `<span class="row-label">${advice.rowLabel}</span>`;
     container.appendChild(row);
   });
 }
