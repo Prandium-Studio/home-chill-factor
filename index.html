@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1612" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Chill Factor" />
+  <meta name="description" content="Overnight fireplace guidance for your home" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Home Chill Factor</title>
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <span id="location-name" class="location-name">Loading…</span>
+      <button id="settings-btn" class="icon-btn" aria-label="Settings">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </header>
+
+    <main id="main-content">
+      <div id="loading-state" class="state-screen">
+        <p class="loading-text">Checking tonight's forecast…</p>
+      </div>
+
+      <div id="error-state" class="state-screen hidden">
+        <p class="error-text">Unable to load forecast.<br/>Check connection and try again.</p>
+        <button id="retry-btn" class="retry-btn">Try again</button>
+      </div>
+
+      <div id="forecast-view" class="hidden">
+        <!-- Hero card -->
+        <section id="hero-card" class="hero-card">
+          <p id="tonight-label" class="night-label"></p>
+          <div id="flame-icon" class="flame-container"></div>
+          <div class="score-block">
+            <span id="score-number" class="score-number"></span>
+          </div>
+          <p id="advice-label" class="advice-label"></p>
+          <p id="advice-detail" class="advice-detail"></p>
+          <p id="timing-line" class="timing-line hidden"></p>
+          <div id="metric-row" class="metric-row"></div>
+        </section>
+
+        <!-- Compact night rows -->
+        <div class="divider"></div>
+        <section id="night-rows" class="night-rows"></section>
+
+        <p id="last-updated" class="last-updated"></p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settings-overlay" class="settings-overlay hidden" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2 class="settings-title">Location</h2>
+        <button id="settings-close" class="icon-btn" aria-label="Close settings">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-body">
+        <label class="field-label" for="setting-name">Location name</label>
+        <input id="setting-name" class="field-input" type="text" placeholder="e.g. Casuarina NSW" />
+
+        <label class="field-label" for="setting-lat">Latitude</label>
+        <input id="setting-lat" class="field-input" type="number" step="0.001" placeholder="-28.319" />
+
+        <label class="field-label" for="setting-lon">Longitude</label>
+        <input id="setting-lon" class="field-input" type="number" step="0.001" placeholder="153.574" />
+
+        <p class="settings-tip">Tip: find lat/lon at <strong>maps.google.com</strong> — right-click any point.</p>
+
+        <button id="settings-save" class="save-btn">Save &amp; Refresh</button>
+        <button id="settings-reset" class="reset-btn">Reset to Casuarina</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
