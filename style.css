@@ -220,14 +220,14 @@ html, body {
 .night-row:last-child { border-bottom: none; }
 .night-row:active { background: rgba(255,255,255,0.03); }
 
-/* Layout order: day | bar (fixed) | score | label (fills rest, left-aligned) */
+/* Layout: day (fills left) | bar | score | label — bar/score/label grouped left */
 
 .row-day {
   font-size: 15px;
   font-weight: 500;
   color: var(--text-primary);
-  width: 86px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .row-bar {
@@ -248,17 +248,15 @@ html, body {
   font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
-  width: 32px;
-  text-align: right;
   flex-shrink: 0;
+  text-align: left;
 }
 
 .row-label {
   font-size: 12px;
   color: var(--text-secondary);
   text-align: left;
-  flex: 1;
-  min-width: 0;
+  flex-shrink: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
