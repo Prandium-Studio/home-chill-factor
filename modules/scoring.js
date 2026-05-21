@@ -37,7 +37,7 @@ function windScore(minActual, minApparent, windDirection) {
 
   let dirFactor;
   const d = windDirection;
-  if (d >= 247 && d <= 315)      dirFactor = 1.0;
+  if (d >= 225 && d <= 315)      dirFactor = 1.0;
   else if (d >= 135 && d <= 202) dirFactor = 0.7;
   else if (d >= 0 && d <= 90)    dirFactor = 0.5;
   else                            dirFactor = 0.75;
