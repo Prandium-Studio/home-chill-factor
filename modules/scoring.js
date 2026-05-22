@@ -37,10 +37,9 @@ function windScore(minActual, minApparent, windDirection) {
 
   let dirFactor;
   const d = windDirection;
-  if (d >= 225 && d <= 315)      dirFactor = 1.0;
-  else if (d >= 135 && d <= 202) dirFactor = 0.7;
-  else if (d >= 0 && d <= 90)    dirFactor = 0.5;
-  else                            dirFactor = 0.75;
+  if (d >= 150 && d <= 315)     dirFactor = 1.0;   // SSE–WNW: full weight
+  else if (d >= 0 && d <= 90)  dirFactor = 0.5;   // N–NE: mild air mass
+  else                          dirFactor = 0.75;  // 91–149, 316–359
 
   return Math.min(base * dirFactor, 2.0);
 }
