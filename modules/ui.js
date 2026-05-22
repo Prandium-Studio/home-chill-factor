@@ -92,7 +92,8 @@ export function renderHero(nightData, score) {
   document.getElementById('metric-row').innerHTML =
     `<span class="metric-item"><strong>WAT</strong> ${score.wat}°</span>` +
     `<span class="metric-item"><strong>Wind</strong> ${score.windScore.toFixed(1)}</span>` +
-    `<span class="metric-item"><strong>Cloud</strong> ${score.avgCloud}%</span>`;
+    `<span class="metric-item"><strong>Cloud</strong> ${score.avgCloud}%</span>` +
+    (score.soakScore > 0 ? `<span class="metric-item"><strong>Soak</strong> ${score.soakScore.toFixed(1)}</span>` : '');
 }
 
 export function renderRows(nights, scores) {

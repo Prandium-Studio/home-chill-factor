@@ -126,6 +126,16 @@ export function parseNights(data) {
     const solarHours = [13, 14, 15, 16, 17];
     const afternoonCloud = solarHours.map(h => getVal(cloud, eveningDate, h)).filter(v => v !== null);
 
+    // Daytime cold soak: 9am–4pm actual/apparent gaps (8 hours)
+    const soakHours = [9, 10, 11, 12, 13, 14, 15, 16];
+    const daytimeGaps = soakHours
+      .map(h => {
+        const t = getVal(temp, eveningDate, h);
+        const a = getVal(apparent, eveningDate, h);
+        return (t !== null && a !== null) ? t - a : null;
+      })
+      .filter(v => v !== null);
+
     const minActualTemp = watTemps.length ? Math.min(...watTemps) : 10;
     const minApparentTemp = watApparent.length ? Math.min(...watApparent) : 10;
 
@@ -136,6 +146,7 @@ export function parseNights(data) {
       coreApparent: watApparent,
       eveningTemps,
       afternoonCloud,
+      daytimeGaps,
       overnightHumidity: average(watHumidity),
       windDirection: mode(watWindDir),
       minActualTemp,

@@ -57,6 +57,15 @@ function dampnessScore(overnightHumidity, afternoonCloudAvg) {
   return 0;
 }
 
+function daytimeSoakScore(daytimeGaps) {
+  if (!daytimeGaps || !daytimeGaps.length) return 0;
+  const avg = average(daytimeGaps);
+  if (avg <= 1) return 0;
+  if (avg <= 2) return 0.4;
+  if (avg <= 4) return 0.7;
+  return 1.0;
+}
+
 export function computeChillScore(nightData) {
   const wat = computeWAT(nightData.coreTemps);
   const avgCloud = average(nightData.afternoonCloud);
@@ -64,8 +73,9 @@ export function computeChillScore(nightData) {
   const wiScore = windScore(nightData.minActualTemp, nightData.minApparentTemp, nightData.windDirection);
   const sScore = solarScore(avgCloud);
   const dScore = dampnessScore(nightData.overnightHumidity, avgCloud);
+  const soakScore = daytimeSoakScore(nightData.daytimeGaps);
 
-  const total = Math.min(wScore + wiScore + sScore + dScore, 10);
+  const total = Math.min(wScore + wiScore + sScore + dScore + soakScore, 10);
 
   return {
     total: Math.round(total * 10) / 10,
@@ -74,6 +84,7 @@ export function computeChillScore(nightData) {
     windScore: wiScore,
     solarScore: sScore,
     dampScore: dScore,
+    soakScore,
     avgCloud: Math.round(avgCloud)
   };
 }
