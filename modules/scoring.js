@@ -27,8 +27,8 @@ function watScore(wat) {
   return 7.5;
 }
 
-function windScore(minActual, minApparent, windDirection) {
-  const diff = minActual - minApparent;
+function windScore(maxOvernightGap, windDirection) {
+  const diff = maxOvernightGap;
 
   let base;
   if (diff <= 1)      base = 0;
@@ -91,7 +91,7 @@ export function computeChillScore(nightData) {
   const wat = computeWAT(nightData.coreTemps);
   const avgCloud = average(nightData.afternoonCloud);
   const wScore  = watScore(wat);
-  const wiScore = windScore(nightData.minActualTemp, nightData.minApparentTemp, nightData.windDirection);
+  const wiScore = windScore(nightData.maxOvernightGap, nightData.windDirection);
   const sScore  = solarScore(avgCloud);
   const dScore  = dampnessScore(nightData.overnightHumidity, avgCloud);
   const soakScore  = daytimeSoakScore(nightData.daytimeGaps);

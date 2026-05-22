@@ -147,22 +147,25 @@ export function parseNights(data) {
       })
       .filter(v => v !== null);
 
-    const minActualTemp = watTemps.length ? Math.min(...watTemps) : 10;
-    const minApparentTemp = watApparent.length ? Math.min(...watApparent) : 10;
+    // Max hourly gap: find worst single-hour wind chill event overnight
+    let maxOvernightGap = 0;
+    for (let i = 0; i < Math.min(watTemps.length, watApparent.length); i++) {
+      const gap = watTemps[i] - watApparent[i];
+      if (gap > maxOvernightGap) maxOvernightGap = gap;
+    }
 
     nights.push({
       label: dayLabel(offset),
       date: new Date(eveningDate),
       coreTemps: watTemps,
       coreApparent: watApparent,
+      maxOvernightGap,
       eveningTemps,
       eveningGaps,
       afternoonCloud,
       daytimeGaps,
       overnightHumidity: average(watHumidity),
-      windDirection: mode(watWindDir),
-      minActualTemp,
-      minApparentTemp
+      windDirection: mode(watWindDir)
     });
   }
 
