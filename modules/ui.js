@@ -93,7 +93,9 @@ export function renderHero(nightData, score) {
     `<span class="metric-item"><strong>WAT</strong> ${score.wat}°</span>` +
     `<span class="metric-item"><strong>Wind</strong> ${score.windScore.toFixed(1)}</span>` +
     `<span class="metric-item"><strong>Cloud</strong> ${score.avgCloud}%</span>` +
-    (score.soakScore > 0 ? `<span class="metric-item"><strong>Soak</strong> ${score.soakScore.toFixed(1)}</span>` : '');
+    (score.soakScore  > 0 ? `<span class="metric-item"><strong>Soak</strong> ${score.soakScore.toFixed(1)}</span>`  : '') +
+    (score.dropScore  > 0 ? `<span class="metric-item"><strong>Drop</strong> ${score.dropScore.toFixed(1)}</span>`  : '') +
+    (score.eWindScore > 0 ? `<span class="metric-item"><strong>Eve</strong> ${score.eWindScore.toFixed(1)}</span>`  : '');
 }
 
 export function renderRows(nights, scores) {

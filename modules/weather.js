@@ -92,24 +92,35 @@ export function parseNights(data) {
     const watDate = dateString(offset);       // 23:00 start
     const watNextDate = dateString(offset + 1); // 00:00–07:00
 
-    // Evening: 17:00–22:00 (6 hours)
-    const eveningHours = [17, 18, 19, 20, 21, 22];
+    // Evening: 16:00–21:00 (6 hours) — used for timing flag and trajectory
+    const eveningHours = [16, 17, 18, 19, 20, 21];
     const eveningTemps = eveningHours.map(h => getVal(temp, eveningDate, h)).filter(v => v !== null);
 
-    // WAT window: 23:00 same day, then 00:00–07:00 next day (9 total)
+    // Evening gaps (actual−apparent) 16:00–21:00 — sub-factor B
+    const eveningGaps = eveningHours
+      .map(h => {
+        const t = getVal(temp, eveningDate, h);
+        const a = getVal(apparent, eveningDate, h);
+        return (t !== null && a !== null) ? t - a : null;
+      })
+      .filter(v => v !== null);
+
+    // WAT window: 21:00–22:00–23:00 same day, then 00:00–07:00 next day (11 total)
     const watTemps = [];
     const watApparent = [];
     const watHumidity = [];
     const watWindDir = [];
 
-    const v23t = getVal(temp, watDate, 23);
-    const v23a = getVal(apparent, watDate, 23);
-    const v23h = getVal(humidity, watDate, 23);
-    const v23d = getVal(windDir, watDate, 23);
-    if (v23t !== null) watTemps.push(v23t);
-    if (v23a !== null) watApparent.push(v23a);
-    if (v23h !== null) watHumidity.push(v23h);
-    if (v23d !== null) watWindDir.push(v23d);
+    for (const h of [21, 22, 23]) {
+      const vt = getVal(temp, watDate, h);
+      const va = getVal(apparent, watDate, h);
+      const vh = getVal(humidity, watDate, h);
+      const vd = getVal(windDir, watDate, h);
+      if (vt !== null) watTemps.push(vt);
+      if (va !== null) watApparent.push(va);
+      if (vh !== null) watHumidity.push(vh);
+      if (vd !== null) watWindDir.push(vd);
+    }
 
     for (const h of [0, 1, 2, 3, 4, 5, 6, 7]) {
       const vt = getVal(temp, watNextDate, h);
@@ -145,6 +156,7 @@ export function parseNights(data) {
       coreTemps: watTemps,
       coreApparent: watApparent,
       eveningTemps,
+      eveningGaps,
       afternoonCloud,
       daytimeGaps,
       overnightHumidity: average(watHumidity),

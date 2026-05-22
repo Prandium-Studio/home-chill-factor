@@ -1,5 +1,6 @@
-const WAT_WEIGHTS = [0.5, 1.0, 1.5, 2.0, 2.5, 2.5, 3.0, 2.0, 0.5];
-const WAT_WEIGHT_SUM = 16.0;
+// Hours: 21:00, 22:00, 23:00, 00:00, 01:00, 02:00, 03:00, 04:00, 05:00, 06:00, 07:00
+const WAT_WEIGHTS = [0.2, 0.3, 0.5, 1.0, 1.5, 2.0, 2.5, 2.5, 3.0, 2.0, 0.5];
+const WAT_WEIGHT_SUM = 16.5;
 
 function average(arr) {
   if (!arr.length) return 0;
@@ -66,16 +67,38 @@ function daytimeSoakScore(daytimeGaps) {
   return 1.0;
 }
 
+function eveningDropScore(eveningTemps) {
+  // Sub-factor A: temp drop 16:00→21:00, max 1.5 pts
+  if (!eveningTemps || eveningTemps.length < 6) return 0;
+  const drop = eveningTemps[0] - eveningTemps[5]; // 16:00 minus 21:00
+  if (drop <= 2) return 0;
+  if (drop <= 4) return 0.7;
+  if (drop <= 7) return 1.2;
+  return 1.5;
+}
+
+function eveningWindScore(eveningGaps) {
+  // Sub-factor B: avg actual/apparent gap 16:00–21:00, max 1.0 pts
+  if (!eveningGaps || !eveningGaps.length) return 0;
+  const avg = average(eveningGaps);
+  if (avg <= 1) return 0;
+  if (avg <= 2) return 0.3;
+  if (avg <= 4) return 0.6;
+  return 1.0;
+}
+
 export function computeChillScore(nightData) {
   const wat = computeWAT(nightData.coreTemps);
   const avgCloud = average(nightData.afternoonCloud);
-  const wScore = watScore(wat);
+  const wScore  = watScore(wat);
   const wiScore = windScore(nightData.minActualTemp, nightData.minApparentTemp, nightData.windDirection);
-  const sScore = solarScore(avgCloud);
-  const dScore = dampnessScore(nightData.overnightHumidity, avgCloud);
-  const soakScore = daytimeSoakScore(nightData.daytimeGaps);
+  const sScore  = solarScore(avgCloud);
+  const dScore  = dampnessScore(nightData.overnightHumidity, avgCloud);
+  const soakScore  = daytimeSoakScore(nightData.daytimeGaps);
+  const dropScore  = eveningDropScore(nightData.eveningTemps);
+  const eWindScore = eveningWindScore(nightData.eveningGaps);
 
-  const total = Math.min(wScore + wiScore + sScore + dScore + soakScore, 10);
+  const total = Math.min(wScore + wiScore + sScore + dScore + soakScore + dropScore + eWindScore, 10);
 
   return {
     total: Math.round(total * 10) / 10,
@@ -85,6 +108,8 @@ export function computeChillScore(nightData) {
     solarScore: sScore,
     dampScore: dScore,
     soakScore,
+    dropScore,
+    eWindScore,
     avgCloud: Math.round(avgCloud)
   };
 }
