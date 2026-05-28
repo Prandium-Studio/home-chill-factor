@@ -150,6 +150,18 @@ function updateLastUpdated() {
   if (el) el.textContent = diff < 2 ? 'Updated just now' : `Updated ${diff} min ago`;
 }
 
+export function setupInfo() {
+  const overlay  = document.getElementById('info-overlay');
+  const openBtn  = document.getElementById('info-btn');
+  const closeBtn = document.getElementById('info-close');
+
+  openBtn.addEventListener('click', () => overlay.classList.remove('hidden'));
+  closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.add('hidden');
+  });
+}
+
 export function setupSettings(onSave) {
   const overlay    = document.getElementById('settings-overlay');
   const openBtn    = document.getElementById('settings-btn');

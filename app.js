@@ -1,6 +1,6 @@
 import { fetchWeather, parseNights, DEFAULT_LOCATION } from './modules/weather.js';
 import { computeChillScore } from './modules/scoring.js';
-import { showForecast, showLoading, showError, setupSettings } from './modules/ui.js';
+import { showForecast, showLoading, showError, setupSettings, setupInfo } from './modules/ui.js';
 import { checkAndNotify, requestNotificationPermissionLater } from './modules/notifications.js';
 
 // ── Service worker registration ──
@@ -65,6 +65,7 @@ document.addEventListener('touchend', e => {
 
 // ── Settings wiring ──
 setupSettings(loc => loadForecast(loc));
+setupInfo();
 
 // ── Retry button ──
 document.getElementById('retry-btn').addEventListener('click', () => loadForecast(getLocation()));

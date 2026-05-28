@@ -46,7 +46,16 @@
           <p id="advice-label" class="advice-label"></p>
           <p id="advice-detail" class="advice-detail"></p>
           <p id="timing-line" class="timing-line hidden"></p>
-          <div id="metric-row" class="metric-row"></div>
+          <div class="metric-wrap">
+            <div id="metric-row" class="metric-row"></div>
+            <button id="info-btn" class="info-btn" aria-label="About these metrics">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </button>
+          </div>
         </section>
 
         <!-- Compact night rows -->
@@ -84,6 +93,59 @@
 
         <button id="settings-save" class="save-btn">Save &amp; Refresh</button>
         <button id="settings-reset" class="reset-btn">Reset to Casuarina</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info panel -->
+  <div id="info-overlay" class="settings-overlay hidden" role="dialog" aria-modal="true" aria-label="About the score">
+    <div class="settings-panel info-panel">
+      <div class="settings-header">
+        <h2 class="settings-title">About the score</h2>
+        <button id="info-close" class="icon-btn" aria-label="Close info">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-body info-body">
+        <p class="info-intro">Tonight's score is the sum of several factors, capped at 10. Higher = more reason to light the fire.</p>
+
+        <div class="info-block">
+          <h3>WAT &nbsp;<span class="info-range">0 – 7.5 pts</span></h3>
+          <p>Weighted average temperature across <strong>9pm – 7am</strong>, biased toward the coldest pre-dawn hours (3–6am carry the most weight). The headline "how cold is the night" reading.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Wind &nbsp;<span class="info-range">0 – 2.0 pts</span></h3>
+          <p>Worst single-hour gap between actual and "feels like" temp overnight, multiplied by a direction factor. SSE–WNW winds (150°–315°) carry full weight; N–NE winds carry half.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Cloud &nbsp;<span class="info-range">0 – 0.8 pts</span></h3>
+          <p>Average cloud cover <strong>1pm – 5pm</strong>. Heavy cloud = little solar warmth absorbed by the building during the day = a colder starting point for the night.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Drop &nbsp;<span class="info-range">0 – 1.5 pts</span></h3>
+          <p>Temperature fall from <strong>4pm to 9pm</strong>. A steep drop means the building is bleeding heat fast as evening sets in.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Soak &nbsp;<span class="info-range">0 – 1.5 pts</span></h3>
+          <p>Average wind chill gap across <strong>9am – 4pm</strong>. Persistent daytime wind that has been stripping heat from the building before nightfall. Only shown when active.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Eve &nbsp;<span class="info-range">0 – 1.0 pts</span></h3>
+          <p>Average wind chill gap across <strong>4pm – 9pm</strong>. Wind still actively cooling the building as you decide whether to light. Only shown when active.</p>
+        </div>
+
+        <div class="info-block">
+          <h3>Dampness &nbsp;<span class="info-range">0 – 0.5 pts</span></h3>
+          <p>Combined effect of high overnight humidity and heavy afternoon cloud — adds a small penalty when the house feels damp on top of cold.</p>
+        </div>
       </div>
     </div>
   </div>
