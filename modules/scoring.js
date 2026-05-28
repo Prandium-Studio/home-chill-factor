@@ -47,14 +47,14 @@ function windScore(maxOvernightGap, windDirection) {
 
 function solarScore(afternoonCloudAvg) {
   if (afternoonCloudAvg <= 30) return 0;
-  if (afternoonCloudAvg <= 60) return 0.1;
-  if (afternoonCloudAvg <= 84) return 0.2;
-  return 0.3;
+  if (afternoonCloudAvg <= 60) return 0.2;
+  if (afternoonCloudAvg <= 84) return 0.5;
+  return 0.8;
 }
 
 function dampnessScore(overnightHumidity, afternoonCloudAvg) {
-  if (overnightHumidity > 90 && afternoonCloudAvg > 85) return 0.2;
-  if (overnightHumidity > 80 && afternoonCloudAvg > 70) return 0.1;
+  if (overnightHumidity > 90 && afternoonCloudAvg > 84) return 0.5;
+  if (overnightHumidity > 80 && afternoonCloudAvg > 70) return 0.3;
   return 0;
 }
 
@@ -62,9 +62,9 @@ function daytimeSoakScore(daytimeGaps) {
   if (!daytimeGaps || !daytimeGaps.length) return 0;
   const avg = average(daytimeGaps);
   if (avg <= 1) return 0;
-  if (avg <= 2) return 0.4;
-  if (avg <= 4) return 0.7;
-  return 1.0;
+  if (avg <= 2) return 0.5;
+  if (avg <= 4) return 0.8;
+  return 1.5;
 }
 
 function eveningDropScore(eveningTemps) {
