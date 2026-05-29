@@ -20,11 +20,14 @@ function computeWAT(coreTemps) {
 function watScore(wat) {
   if (wat >= 16.0) return 0;
   if (wat >= 14.0) return 1.0;
+  if (wat >= 13.0) return 3.0;
   if (wat >= 12.0) return 3.5;
+  if (wat >= 11.0) return 5.0;
   if (wat >= 10.0) return 5.5;
-  if (wat >= 8.0)  return 6.5;
-  if (wat >= 7.0)  return 7.0;
-  return 7.5;
+  if (wat >= 9.0)  return 6.2;
+  if (wat >= 8.0)  return 7.0;
+  if (wat >= 7.0)  return 7.5;
+  return 8.0;
 }
 
 function windScore(maxOvernightGap, windDirection) {
