@@ -119,15 +119,15 @@ export function computeChillScore(nightData) {
 
 export function timingFlag(score) {
   // Derived from score so timing always agrees with the advice band
-  if (score >= 7.5) return { text: 'Start early afternoon', time: '~3pm' };
-  if (score >= 5.5) return { text: 'Start before dinner',   time: '~5pm' };
+  if (score > 8.0)  return { text: 'Consider lighting',    time: '3–4pm' };
+  if (score >= 5.7) return { text: 'Start before dinner',  time: '~5pm' };
   return              { text: 'Start after dinner',         time: '~7pm' };
 }
 
 export function adviceFromScore(score) {
-  if (score < 1.5) return { label: 'No fire needed',       rowLabel: 'No fire',   detail: 'Mild night ahead',                    intensity: 0 };
-  if (score < 3.5) return { label: 'Light burn',           rowLabel: 'Light',     detail: 'Optional warmth',                     intensity: 1 };
-  if (score < 5.5) return { label: 'Moderate burn',        rowLabel: 'Moderate',  detail: 'Worth lighting tonight',              intensity: 2 };
-  if (score < 7.5) return { label: 'Strong burn',          rowLabel: 'Strong',    detail: 'Prep the fireplace before dark',      intensity: 3 };
-  return             { label: 'Full burn — start early', rowLabel: 'Full burn', detail: 'Cold night. Light well before dark.', intensity: 4 };
+  if (score < 1.5)  return { label: 'No fire needed',       rowLabel: 'No fire',   detail: 'Mild night ahead',                    intensity: 0 };
+  if (score < 3.5)  return { label: 'Light burn',           rowLabel: 'Light',     detail: 'Optional warmth',                     intensity: 1 };
+  if (score < 5.7)  return { label: 'Moderate burn',        rowLabel: 'Moderate',  detail: 'Worth lighting tonight',              intensity: 2 };
+  if (score <= 8.0) return { label: 'Strong burn',          rowLabel: 'Strong',    detail: 'Prep the fireplace before dark',      intensity: 3 };
+  return              { label: 'Full burn — start early', rowLabel: 'Full burn', detail: 'Cold night. Light well before dark.', intensity: 4 };
 }
