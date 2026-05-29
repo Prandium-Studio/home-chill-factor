@@ -39,7 +39,13 @@
         <!-- Hero card -->
         <section id="hero-card" class="hero-card">
           <p id="tonight-label" class="night-label"></p>
-          <div id="flame-icon" class="flame-container"></div>
+          <div class="flame-row">
+            <div id="flame-icon" class="flame-container"></div>
+            <div class="testing-notice" role="note">
+              <span class="testing-badge">Testing phase</span>
+              <p>Predicted score may be unreliable</p>
+            </div>
+          </div>
           <div class="score-block">
             <span id="score-number" class="score-number"></span>
           </div>
@@ -57,13 +63,6 @@
             </button>
           </div>
         </section>
-
-        <!-- Calibration notice (remove once thresholds are validated) -->
-        <div class="calibration-notice" role="note">
-          <span class="calibration-badge">Calibration in progress</span>
-          <p>Scoring thresholds are still being tuned during this testing period.
-          The number is a guide, not gospel — always cross-check it against your own read of the conditions before deciding on the fire.</p>
-        </div>
 
         <!-- Compact night rows -->
         <div class="divider"></div>
