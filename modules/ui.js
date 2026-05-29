@@ -68,7 +68,7 @@ function intensityBarHTML(intensity) {
 
 export function renderHero(nightData, score) {
   const advice = adviceFromScore(score.total);
-  const timing = timingFlag(nightData.eveningTemps);
+  const timing = timingFlag(score.total);
 
   const heroCard = document.getElementById('hero-card');
   heroCard.className = `hero-card intensity-${advice.intensity}`;

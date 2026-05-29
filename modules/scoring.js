@@ -117,11 +117,11 @@ export function computeChillScore(nightData) {
   };
 }
 
-export function timingFlag(eveningTemps) {
-  const avg = average(eveningTemps);
-  if (avg >= 15.5) return { text: 'Start after dinner', time: '~7pm' };
-  if (avg >= 13.0) return { text: 'Start before dinner', time: '~5pm' };
-  return { text: 'Start early afternoon', time: '~3pm' };
+export function timingFlag(score) {
+  // Derived from score so timing always agrees with the advice band
+  if (score >= 7.5) return { text: 'Start early afternoon', time: '~3pm' };
+  if (score >= 5.5) return { text: 'Start before dinner',   time: '~5pm' };
+  return              { text: 'Start after dinner',         time: '~7pm' };
 }
 
 export function adviceFromScore(score) {
