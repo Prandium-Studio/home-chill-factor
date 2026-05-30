@@ -75,7 +75,7 @@ function eveningDropScore(eveningTemps) {
   if (!eveningTemps || eveningTemps.length < 6) return 0;
   const drop = eveningTemps[0] - eveningTemps[5]; // 16:00 minus 21:00
   if (drop <= 2) return 0;
-  if (drop <= 4) return 0.7;
+  if (drop <= 4) return 0.5;
   if (drop <= 7) return 1.2;
   return 1.5;
 }
