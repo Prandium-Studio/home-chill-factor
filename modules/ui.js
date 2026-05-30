@@ -82,7 +82,7 @@ export function renderHero(nightData, score) {
   document.getElementById('advice-detail').textContent = advice.detail;
 
   const timingEl = document.getElementById('timing-line');
-  if (score.total >= 3.5) {
+  if (score.total >= 3.8) {
     timingEl.textContent = `${timing.text}  ${timing.time}`;
     timingEl.classList.remove('hidden');
   } else {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'home-chill-v16';
+const CACHE_NAME = 'home-chill-v17';
 
 const STATIC_ASSETS = [
   '/',
