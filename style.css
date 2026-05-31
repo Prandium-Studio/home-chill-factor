@@ -517,6 +517,22 @@ html, body {
   margin-bottom: 6px;
 }
 
+.info-callout {
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: rgba(212, 130, 58, 0.08);
+  border-left: 3px solid var(--accent-moderate);
+  padding: 10px 12px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.info-callout strong {
+  color: var(--accent-moderate);
+  font-weight: 600;
+}
+
 .info-block h3 {
   font-size: 15px;
   font-weight: 600;
