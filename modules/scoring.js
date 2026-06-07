@@ -17,18 +17,17 @@ function computeWAT(coreTemps) {
   return weightedSum / (weightSum || WAT_WEIGHT_SUM);
 }
 
+// Overnight coldness — max 6.0 pts (reduced from 9.0 to leave room for daytime factors)
 function watScore(wat) {
   if (wat >= 16.0) return 0;
-  if (wat >= 15.0) return 0.4;
-  if (wat >= 14.0) return 1.1;
-  if (wat >= 13.0) return 3.0;
-  if (wat >= 12.0) return 3.7;
-  if (wat >= 11.0) return 5.0;
-  if (wat >= 10.0) return 5.8;
-  if (wat >= 9.0)  return 6.6;
-  if (wat >= 8.0)  return 7.5;
-  if (wat >= 7.0)  return 8.2;
-  return 9.0;
+  if (wat >= 15.0) return 0.5;
+  if (wat >= 14.0) return 1.5;
+  if (wat >= 13.0) return 2.8;
+  if (wat >= 12.0) return 3.5;
+  if (wat >= 11.0) return 4.5;
+  if (wat >= 10.0) return 5.2;
+  if (wat >= 9.0)  return 5.6;
+  return 6.0;
 }
 
 function windScore(maxOvernightGap, windDirection) {
@@ -42,7 +41,7 @@ function windScore(maxOvernightGap, windDirection) {
 
   let dirFactor;
   const d = windDirection;
-  if (d >= 150 && d <= 315)     dirFactor = 1.0;   // SSE–WNW: full weight
+  if (d >= 150 && d <= 315)    dirFactor = 1.0;   // SSE–WNW: full weight
   else if (d >= 0 && d <= 90)  dirFactor = 0.5;   // N–NE: mild air mass
   else                          dirFactor = 0.75;  // 91–149, 316–359
 
@@ -56,33 +55,36 @@ function solarScore(afternoonCloudAvg) {
   return 0.8;
 }
 
+// Decoupled humidity tiers — high humidity alone now registers
 function dampnessScore(overnightHumidity, afternoonCloudAvg) {
-  if (overnightHumidity > 90 && afternoonCloudAvg > 84) return 1.0;
-  if (overnightHumidity > 80 && afternoonCloudAvg > 70) return 0.3;
+  if (overnightHumidity > 90  && afternoonCloudAvg > 84) return 1.3;
+  if (overnightHumidity >= 85 && afternoonCloudAvg > 60) return 0.9;
+  if (overnightHumidity >= 85)                           return 0.5;
+  if (overnightHumidity >= 80 && afternoonCloudAvg > 70) return 0.4;
   return 0;
 }
 
-function daytimeSoakScore(daytimeGaps) {
-  if (!daytimeGaps || !daytimeGaps.length) return 0;
-  const avg = average(daytimeGaps);
-  if (avg <= 1) return 0;
-  if (avg <= 2) return 0.5;
-  if (avg <= 4) return 0.8;
-  return 1.5;
+// Absolute daytime thermal context — replaces gap-based cold soak
+function daytimeThermalScore(daytimeWAT) {
+  if (!daytimeWAT) return 0;
+  if (daytimeWAT >= 26) return 0;
+  if (daytimeWAT >= 23) return 0.3;
+  if (daytimeWAT >= 21) return 0.6;
+  if (daytimeWAT >= 19) return 0.9;
+  return 1.3;
 }
 
-function eveningDropScore(eveningTemps) {
-  // Sub-factor A: temp drop 16:00→21:00, max 1.5 pts
+// Evening drop rate 16:00→21:00 — arc sub-B, captures transition speed
+function arcDropScore(eveningTemps) {
   if (!eveningTemps || eveningTemps.length < 6) return 0;
-  const drop = eveningTemps[0] - eveningTemps[5]; // 16:00 minus 21:00
+  const drop = eveningTemps[0] - eveningTemps[5];
   if (drop <= 2) return 0;
-  if (drop <= 4) return 0.5;
-  if (drop <= 7) return 1.2;
-  return 1.5;
+  if (drop <= 4) return 0.3;
+  if (drop <= 7) return 0.7;
+  return 1.0;
 }
 
 function eveningWindScore(eveningGaps) {
-  // Sub-factor B: avg actual/apparent gap 16:00–21:00, max 1.0 pts
   if (!eveningGaps || !eveningGaps.length) return 0;
   const avg = average(eveningGaps);
   if (avg <= 1) return 0;
@@ -92,38 +94,45 @@ function eveningWindScore(eveningGaps) {
 }
 
 export function computeChillScore(nightData) {
-  const wat = computeWAT(nightData.coreTemps);
+  const wat      = computeWAT(nightData.coreTemps);
   const avgCloud = average(nightData.afternoonCloud);
-  const wScore  = watScore(wat);
-  const wiScore = windScore(nightData.maxOvernightGap, nightData.windDirection);
-  const sScore  = solarScore(avgCloud);
-  const dScore  = dampnessScore(nightData.overnightHumidity, avgCloud);
-  const soakScore  = daytimeSoakScore(nightData.daytimeGaps);
-  const dropScore  = eveningDropScore(nightData.eveningTemps);
+  const wScore   = watScore(wat);
+  const wiScore  = windScore(nightData.maxOvernightGap, nightData.windDirection);
+  const sScore   = solarScore(avgCloud);
+  const dScore   = dampnessScore(nightData.overnightHumidity, avgCloud);
+  const dtScore  = daytimeThermalScore(nightData.daytimeWAT);
+  const dropScore  = arcDropScore(nightData.eveningTemps);
   const eWindScore = eveningWindScore(nightData.eveningGaps);
 
-  const total = Math.min(wScore + wiScore + sScore + dScore + soakScore + dropScore + eWindScore, 10);
+  const total = Math.min(wScore + wiScore + sScore + dScore + dtScore + dropScore + eWindScore, 10);
 
   return {
     total: Math.round(total * 10) / 10,
     wat: Math.round(wat * 10) / 10,
+    daytimeWAT: nightData.daytimeWAT ? Math.round(nightData.daytimeWAT * 10) / 10 : null,
     watScore: wScore,
     windScore: wiScore,
     solarScore: sScore,
     dampScore: dScore,
-    soakScore,
+    dtScore,
     dropScore,
     eWindScore,
     avgCloud: Math.round(avgCloud)
   };
 }
 
-export function timingFlag(score) {
-  // Derived from score so timing always agrees with the advice band
-  if (score >= 8.7) return { text: 'Consider lighting',    time: '3–4pm' };
-  if (score >= 6.0) return { text: 'Start before dinner',  time: '~5pm' };
-  if (score >= 2.6) return { text: 'Optional light',       time: '~7pm' };
-  return              { text: '',                           time: ''     };
+// Timing decoupled from score — daytime coldness shifts start earlier independently of intensity
+export function timingFlag(score, daytimeWAT) {
+  const coldDay = daytimeWAT != null && daytimeWAT < 19;
+  if (score >= 8.7) return { text: 'Consider lighting',   time: '3–4pm'  };
+  if (score >= 6.0) return { text: 'Start before dinner', time: '~5pm'   };
+  if (score >= 3.8) return coldDay
+    ? { text: 'Start late afternoon',  time: '~5–6pm' }
+    : { text: 'Start after dinner',    time: '~7pm'   };
+  if (score >= 2.6) return coldDay
+    ? { text: 'Light early evening',   time: '~6pm'   }
+    : { text: 'Optional light',        time: '~7pm'   };
+  return { text: '', time: '' };
 }
 
 export function adviceFromScore(score) {

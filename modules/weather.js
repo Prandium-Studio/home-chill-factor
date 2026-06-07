@@ -137,15 +137,12 @@ export function parseNights(data) {
     const solarHours = [13, 14, 15, 16, 17];
     const afternoonCloud = solarHours.map(h => getVal(cloud, eveningDate, h)).filter(v => v !== null);
 
-    // Daytime cold soak: 9am–4pm actual/apparent gaps (8 hours)
-    const soakHours = [9, 10, 11, 12, 13, 14, 15, 16];
-    const daytimeGaps = soakHours
-      .map(h => {
-        const t = getVal(temp, eveningDate, h);
-        const a = getVal(apparent, eveningDate, h);
-        return (t !== null && a !== null) ? t - a : null;
-      })
+    // Daytime thermal baseline: simple average of actual temps 10am–4pm
+    const daytimeHours = [10, 11, 12, 13, 14, 15, 16];
+    const daytimeTemps = daytimeHours
+      .map(h => getVal(temp, eveningDate, h))
       .filter(v => v !== null);
+    const daytimeWAT = daytimeTemps.length ? average(daytimeTemps) : null;
 
     // Max hourly gap: find worst single-hour wind chill event overnight
     let maxOvernightGap = 0;
@@ -163,7 +160,7 @@ export function parseNights(data) {
       eveningTemps,
       eveningGaps,
       afternoonCloud,
-      daytimeGaps,
+      daytimeWAT,
       overnightHumidity: average(watHumidity),
       windDirection: mode(watWindDir)
     });

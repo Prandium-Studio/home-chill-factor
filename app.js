@@ -29,7 +29,7 @@ async function loadForecast(location) {
 
     console.group('Home Chill Factor — data');
     nights.forEach((n, i) => {
-      console.log(`${n.label}: score=${scores[i].total}  WAT=${scores[i].wat}°  wind=${scores[i].windScore}  solar=${scores[i].solarScore}  damp=${scores[i].dampScore}`);
+      console.log(`${n.label}: score=${scores[i].total}  WAT=${scores[i].wat}°  dayWAT=${scores[i].daytimeWAT}°  wind=${scores[i].windScore}  solar=${scores[i].solarScore}  damp=${scores[i].dampScore}  day=${scores[i].dtScore}  drop=${scores[i].dropScore}`);
     });
     console.groupEnd();
 
