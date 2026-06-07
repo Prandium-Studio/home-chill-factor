@@ -121,18 +121,40 @@ export function computeChillScore(nightData) {
   };
 }
 
-// Timing decoupled from score — daytime coldness shifts start earlier independently of intensity
+// Timing: overnight score sets base hour, daytime WAT slides it earlier (floor 2pm)
 export function timingFlag(score, daytimeWAT) {
-  const coldDay = daytimeWAT != null && daytimeWAT < 19;
-  if (score >= 8.7) return { text: 'Consider lighting',   time: '3–4pm'  };
-  if (score >= 6.0) return { text: 'Start before dinner', time: '~5pm'   };
-  if (score >= 3.8) return coldDay
-    ? { text: 'Start late afternoon',  time: '~5–6pm' }
-    : { text: 'Start after dinner',    time: '~7pm'   };
-  if (score >= 2.6) return coldDay
-    ? { text: 'Light early evening',   time: '~6pm'   }
-    : { text: 'Optional light',        time: '~7pm'   };
-  return { text: '', time: '' };
+  if (score < 2.6) return { text: '', time: '' };
+
+  // Base start hour from overnight score band
+  let base;
+  if      (score >= 8.7) base = 15;  // 3pm
+  else if (score >= 6.0) base = 17;  // 5pm
+  else                   base = 19;  // 7pm
+
+  // Daytime WAT < 18.5 starts sliding start time earlier
+  let offset = 0;
+  if (daytimeWAT != null) {
+    if      (daytimeWAT < 13.0) offset = 4.0;
+    else if (daytimeWAT < 16.0) offset = 2.5;
+    else if (daytimeWAT < 18.5) offset = 1.5;
+    else if (daytimeWAT < 21.0) offset = 0.5;
+  }
+
+  const hour    = Math.max(14, base - offset);
+  const rounded = Math.round(hour * 2) / 2;
+  const h       = Math.floor(rounded);
+  const mins    = (rounded % 1) ? ':30' : '';
+  const time    = `~${h > 12 ? h - 12 : h}${mins}pm`;
+
+  let text;
+  if      (score < 3.8)   text = 'Optional light';
+  else if (hour <= 14.5)  text = 'Light early this afternoon';
+  else if (hour <= 16.0)  text = 'Start mid afternoon';
+  else if (hour <= 17.5)  text = 'Start late afternoon';
+  else if (hour <= 18.5)  text = 'Start early evening';
+  else                    text = 'Start after dinner';
+
+  return { text, time };
 }
 
 export function adviceFromScore(score) {
