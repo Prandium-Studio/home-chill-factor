@@ -422,6 +422,24 @@ html, body {
 }
 .save-btn:active { transform: scale(0.97); background: var(--accent-strong); }
 
+.my-location-btn {
+  background: none;
+  border: 1px solid var(--text-muted);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 4px;
+  transition: color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  font-family: inherit;
+}
+.my-location-btn:active { color: var(--text-primary); border-color: var(--text-secondary); }
+.my-location-btn:disabled { opacity: 0.5; cursor: default; }
+
 .reset-btn {
   background: none;
   border: none;

@@ -19,16 +19,16 @@ function computeWAT(coreTemps) {
 
 function watScore(wat) {
   if (wat >= 16.0) return 0;
-  if (wat >= 15.0) return 0.3;
-  if (wat >= 14.0) return 0.8;
-  if (wat >= 13.0) return 2.5;
-  if (wat >= 12.0) return 3.4;
-  if (wat >= 11.0) return 4.8;
-  if (wat >= 10.0) return 5.5;
-  if (wat >= 9.0)  return 6.2;
-  if (wat >= 8.0)  return 7.0;
-  if (wat >= 7.0)  return 7.5;
-  return 8.0;
+  if (wat >= 15.0) return 0.4;
+  if (wat >= 14.0) return 1.1;
+  if (wat >= 13.0) return 3.0;
+  if (wat >= 12.0) return 3.7;
+  if (wat >= 11.0) return 5.0;
+  if (wat >= 10.0) return 5.8;
+  if (wat >= 9.0)  return 6.6;
+  if (wat >= 8.0)  return 7.5;
+  if (wat >= 7.0)  return 8.2;
+  return 9.0;
 }
 
 function windScore(maxOvernightGap, windDirection) {
@@ -57,7 +57,7 @@ function solarScore(afternoonCloudAvg) {
 }
 
 function dampnessScore(overnightHumidity, afternoonCloudAvg) {
-  if (overnightHumidity > 90 && afternoonCloudAvg > 84) return 0.5;
+  if (overnightHumidity > 90 && afternoonCloudAvg > 84) return 1.0;
   if (overnightHumidity > 80 && afternoonCloudAvg > 70) return 0.3;
   return 0;
 }
@@ -120,15 +120,16 @@ export function computeChillScore(nightData) {
 
 export function timingFlag(score) {
   // Derived from score so timing always agrees with the advice band
-  if (score >= 8.5) return { text: 'Consider lighting',    time: '3–4pm' };
+  if (score >= 8.7) return { text: 'Consider lighting',    time: '3–4pm' };
   if (score >= 6.0) return { text: 'Start before dinner',  time: '~5pm' };
-  return              { text: 'Start after dinner',         time: '~7pm' };
+  if (score >= 2.6) return { text: 'Optional light',       time: '~7pm' };
+  return              { text: '',                           time: ''     };
 }
 
 export function adviceFromScore(score) {
   if (score < 2.6)  return { label: 'No fire needed',       rowLabel: 'No fire',   detail: 'Mild night ahead',                    intensity: 0 };
   if (score < 3.8)  return { label: 'Light burn',           rowLabel: 'Light',     detail: 'Optional warmth',                     intensity: 1 };
   if (score < 6.0)  return { label: 'Moderate burn',        rowLabel: 'Moderate',  detail: 'Worth lighting tonight',              intensity: 2 };
-  if (score < 8.5)  return { label: 'Strong burn',          rowLabel: 'Strong',    detail: 'Prep the fireplace before dark',      intensity: 3 };
+  if (score < 8.7)  return { label: 'Strong burn',          rowLabel: 'Strong',    detail: 'Prep the fireplace before dark',      intensity: 3 };
   return              { label: 'Full burn — start early', rowLabel: 'Full burn', detail: 'Cold night. Light well before dark.', intensity: 4 };
 }

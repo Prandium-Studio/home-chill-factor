@@ -82,7 +82,7 @@ export function renderHero(nightData, score) {
   document.getElementById('advice-detail').textContent = advice.detail;
 
   const timingEl = document.getElementById('timing-line');
-  if (score.total >= 3.8) {
+  if (score.total >= 2.6) {
     timingEl.textContent = `${timing.text}  ${timing.time}`;
     timingEl.classList.remove('hidden');
   } else {
@@ -168,6 +168,7 @@ export function setupSettings(onSave) {
   const closeBtn   = document.getElementById('settings-close');
   const saveBtn    = document.getElementById('settings-save');
   const resetBtn   = document.getElementById('settings-reset');
+  const geoBtn     = document.getElementById('use-my-location');
   const nameInput  = document.getElementById('setting-name');
   const latInput   = document.getElementById('setting-lat');
   const lonInput   = document.getElementById('setting-lon');
@@ -200,6 +201,29 @@ export function setupSettings(onSave) {
     document.getElementById('location-name').textContent = name;
     closePanel();
     onSave(loc);
+  });
+
+  geoBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      geoBtn.textContent = 'Not supported';
+      return;
+    }
+    geoBtn.textContent = 'Locating…';
+    geoBtn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        latInput.value  = Math.round(pos.coords.latitude  * 1000) / 1000;
+        lonInput.value  = Math.round(pos.coords.longitude * 1000) / 1000;
+        nameInput.value = nameInput.value.trim() || 'My Location';
+        geoBtn.textContent = '✓ Location found';
+        geoBtn.disabled = false;
+      },
+      () => {
+        geoBtn.textContent = 'Location denied';
+        geoBtn.disabled = false;
+      },
+      { timeout: 10000 }
+    );
   });
 
   resetBtn.addEventListener('click', () => {
